@@ -203,6 +203,7 @@ def process_data():
 
     num_preprocessor = Num_Preprocessor()
     numed_zh_sents = []
+    numed_zh_sents_advanced = []
     zh_num_dicts = []
     count = 0
     print(df.shape[0])
@@ -211,8 +212,11 @@ def process_data():
         zh_num_dict, zh_date_ents, zh_num_idx_dict = num_preprocessor.extract_num(zh_sen, zh_nlp, split_sign='')
         en_num_dict, en_date_ents, en_num_idx_dict = num_preprocessor.extract_num(en_sen, en_nlp, split_sign=' ')
         numed_zh_sent = num_preprocessor.replace_num(zh_sen, zh_num_dict, zh_date_ents)
+        numed_zh_sent_advanced = num_preprocessor.replace_num_advanced(zh_sen,zh_num_idx_dict)
         numed_en_sent = num_preprocessor.replace_num(en_sen, en_num_dict, en_date_ents)
+        numed_en_sent_advanced = num_preprocessor.replace_num_advanced(en_sen, en_num_idx_dict)
         numed_zh_sents.append(numed_zh_sent)
+        numed_zh_sents_advanced.append(numed_en_sent_advanced)
         zh_num_dicts.append(zh_num_dict)
         count += 1
         if count % 100 == 0:
