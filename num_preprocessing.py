@@ -2,6 +2,7 @@ import pandas as pd
 import spacy
 import os
 
+
 class Num_Preprocessor():
 
     def extract_date(self,sent,nlp):
@@ -43,7 +44,7 @@ class Num_Preprocessor():
         end = idxs[-1][0]+idxs[-1][1]
         return start,end
 
-    def add_num_phrase_procedure(self,num_phrase, num_count, num_dict,num_idx,num_idx_dict,non_needed_phrase = ['','一','one','一些','多少','大多','數','大多數','多','多數','眾多',
+    def add_num_phrase_procedure(self,num_phrase, num_count, num_dict,num_idx,num_idx_dict,non_needed_phrase = ['','一些','多少','大多','數','大多數','多','多數','眾多',
                                                           '一半','數百萬','數千萬','數以萬計','大量','許','諸多','很多','幾年','若干','半數','幾','幾票',
                                                           '部分','部份','兩半','許多','同一','一點','一家','一大堆','大部分','約半','組數十','好幾部','著好幾','多年','一大','一起','整','整數']):
         if num_phrase not in non_needed_phrase:
@@ -77,7 +78,11 @@ class Num_Preprocessor():
                         added_phrase = self.check_non_num_chinese(token.text)
                         if added_phrase!='':
                             num_phrase += split_sign + added_phrase
-                            num_idx.append((token.idx,len(token.text)))
+                            # --- Keep the same as num_phrase
+                            # --- If the last character is %
+                            totxt = token.text if token.text[-1] is not '%' else token.text[:-1]
+                            # ---
+                            num_idx.append((token.idx,len(totxt)))
                 else:
                     if token.tag_=='CD':
                         #'CD' means a number, but we need to check model tokenize adj of number as cd. ex. many 多少 一些 大部分 
@@ -86,7 +91,12 @@ class Num_Preprocessor():
                         if num_phrase == '':
                             is_phrase = False
                         else:
-                            num_idx.append((token.idx,len(token.text)))
+                            num_idx.append((token.idx, len(token.text)))
+                            # --- Keep the same as num_phrase
+                            # --- If the last character is %
+                            totxt = token.text if token.text[-1] is not '%' else token.text[:-1]
+                            # ---
+                            num_idx.append((token.idx,len(totxt)))
             else:
                 if is_phrase:
                     num_phrase = self.check_phrase(num_phrase,remove_tokens)
@@ -216,7 +226,7 @@ def process_data():
         numed_en_sent = num_preprocessor.replace_num(en_sen, en_num_dict, en_date_ents)
         numed_en_sent_advanced = num_preprocessor.replace_num_advanced(en_sen, en_num_idx_dict)
         numed_zh_sents.append(numed_zh_sent)
-        numed_zh_sents_advanced.append(numed_en_sent_advanced)
+        numed_zh_sents_advanced.append(numed_zh_sent_advanced)
         zh_num_dicts.append(zh_num_dict)
         count += 1
         if count % 100 == 0:
@@ -227,6 +237,4 @@ def process_data():
 
 
 if __name__=='__main__':
-
-
     chinese_example()
