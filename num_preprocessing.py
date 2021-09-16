@@ -52,7 +52,7 @@ class Num_Preprocessor():
             num_idx_dict[f'<NUM{num_count}>'] = self.calculate_num_idx_start_end(num_idx)
             num_phrase = ''
             num_count += 1
-            num_idx = []
+        num_idx = []
         is_phrase = False
         return num_phrase,num_count,num_dict,is_phrase, num_idx, num_idx_dict
 
