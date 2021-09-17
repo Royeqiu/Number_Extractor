@@ -58,7 +58,7 @@ class Num_Preprocessor():
 
     def extract_num(self,sent, nlp, split_sign =' ', remove_tokens = ['元','%']):
         extracted_sent,date_ents = self.extract_date(sent,nlp)
-        doc = nlp(extracted_sent)
+        doc = nlp(sent)
         num_count = 0
         is_phrase = False
         num_phrase = ''
